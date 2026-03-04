@@ -13,7 +13,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Screenshot Tool — Settings"
-        Width="480" Height="520"
+        Width="480" Height="600"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="#1E1E1E">
@@ -251,16 +251,34 @@
                 <!-- ═══ Hotkey Section ═════════════════════════════ -->
                 <TextBlock Text="⌨️ Hotkey" Style="{StaticResource SectionHeader}" />
 
-                <TextBlock Text="Global shortcut:" Style="{StaticResource LabelStyle}" />
-                <ComboBox x:Name="CmbHotkey"
-                          Background="#2D2D2D" Foreground="White"
-                          BorderBrush="#555555" Padding="6,4" FontSize="12">
-                    <ComboBoxItem Content="Ctrl+Shift+S" />
-                    <ComboBoxItem Content="Ctrl+Shift+PrintScreen" />
-                    <ComboBoxItem Content="PrintScreen" />
-                    <ComboBoxItem Content="Alt+Shift+S" />
-                    <ComboBoxItem Content="Win+Shift+S" />
-                </ComboBox>
+                <TextBlock Text="Global shortcut (click the box and press your desired key combination):" Style="{StaticResource LabelStyle}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="TxtHotkey"
+                             Grid.Column="0"
+                             IsReadOnly="True"
+                             Background="#2D2D2D" Foreground="White"
+                             BorderBrush="#555555" Padding="6,4"
+                             FontSize="13" FontWeight="SemiBold"
+                             Cursor="Hand"
+                             PreviewKeyDown="TxtHotkey_PreviewKeyDown"
+                             GotFocus="TxtHotkey_GotFocus"
+                             LostFocus="TxtHotkey_LostFocus" />
+                    <Button x:Name="BtnResetHotkey"
+                            Grid.Column="1"
+                            Content="Reset"
+                            Click="BtnResetHotkey_Click"
+                            Margin="8,0,0,0" Padding="12,4"
+                            Background="#3C3C3C" Foreground="White"
+                            BorderBrush="#555555" />
+                </Grid>
+                <TextBlock x:Name="TxtHotkeyHint"
+                           Text="Press a key combination (e.g. Ctrl+Shift+S)"
+                           Foreground="#888888" FontSize="11"
+                           Margin="0,4,0,0" />
                 <TextBlock x:Name="TxtHotkeyWarning"
                            Text="⚠ Win+Shift+S requires disabling built-in Snipping Tool"
                            Foreground="#FFaa44" FontSize="11"
@@ -319,6 +337,21 @@
                           Content=" Copy screenshots to clipboard"
                           Foreground="#CCCCCC" FontSize="13"
                           Margin="0,4" IsChecked="True" />
+
+                <!-- ═══ About Section ══════════════════════════════ -->
+                <TextBlock Text="ℹ About" Style="{StaticResource SectionHeader}" />
+
+                <TextBlock Foreground="#CCCCCC" FontSize="12" TextWrapping="Wrap">
+                    <Run Text="ScreenshotTool" FontWeight="SemiBold" Foreground="White" />
+                    <Run Text=" — A lightweight Snipping Tool replacement" />
+                </TextBlock>
+                <TextBlock Foreground="#AAAAAA" FontSize="12" Margin="0,4,0,0">
+                    <Run Text="Author: " />
+                    <Run Text="Tahsan Ahmed Rafat" FontWeight="SemiBold" Foreground="#4488FF" />
+                    <Run Text=" (AKA " />
+                    <Run Text="PHENOMENAL" FontWeight="Bold" Foreground="#FFaa44" />
+                    <Run Text=")" />
+                </TextBlock>
 
             </StackPanel>
         </ScrollViewer>

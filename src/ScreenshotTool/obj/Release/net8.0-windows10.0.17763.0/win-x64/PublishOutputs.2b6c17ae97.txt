@@ -1,0 +1,2 @@
+d:\Work\cplp\screenshottool\publish\ScreenshotTool.pdb
+d:\Work\cplp\screenshottool\publish\ScreenshotTool.exe

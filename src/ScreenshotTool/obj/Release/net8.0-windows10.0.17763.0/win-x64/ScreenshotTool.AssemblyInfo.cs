@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ScreenshotTool")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4540a1a1d1e1bd1ded26abca850820ada75d8185")]
 [assembly: System.Reflection.AssemblyProductAttribute("ScreenshotTool")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ScreenshotTool")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
