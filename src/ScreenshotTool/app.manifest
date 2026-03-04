@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
+<!-- ║  ScreenshotTool — app.manifest                                  ║ -->
+<!-- ║  Configures DPI awareness (PerMonitorV2) for correct            ║ -->
+<!-- ║  multi-monitor screenshot coordinates, and sets UAC level.      ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
+
+<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
+  <assemblyIdentity version="1.0.0.0" name="ScreenshotTool" type="win32" />
+
+  <!-- ─── DPI Awareness: PerMonitorV2 ─────────────────────────── -->
+  <!-- Required for correct coordinate mapping across monitors     -->
+  <!-- with different scaling levels (100%, 125%, 150%, etc.)      -->
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
+      <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true/pm</dpiAware>
+    </windowsSettings>
+  </application>
+
+  <!-- ─── UAC Execution Level ─────────────────────────────────── -->
+  <!-- Run as invoker (no elevation required). Screenshots work    -->
+  <!-- fine without admin unless capturing elevated windows.        -->
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
+    <security>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+
+  <!-- ─── Supported OS Versions ───────────────────────────────── -->
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- Windows 10 / 11 -->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
+    </application>
+  </compatibility>
+</assembly>

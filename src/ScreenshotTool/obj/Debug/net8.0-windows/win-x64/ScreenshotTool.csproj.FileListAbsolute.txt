@@ -1,0 +1,13 @@
+D:\Work\cplp\screenshottool\src\ScreenshotTool\obj\Debug\net8.0-windows\win-x64\ScreenshotTool.csproj.AssemblyReference.cache
+D:\Work\cplp\screenshottool\src\ScreenshotTool\obj\Debug\net8.0-windows\win-x64\Views\OverlayWindow.baml
+D:\Work\cplp\screenshottool\src\ScreenshotTool\obj\Debug\net8.0-windows\win-x64\Views\SettingsWindow.baml
+D:\Work\cplp\screenshottool\src\ScreenshotTool\obj\Debug\net8.0-windows\win-x64\App.baml
+D:\Work\cplp\screenshottool\src\ScreenshotTool\obj\Debug\net8.0-windows\win-x64\Views\OverlayWindow.g.cs
+D:\Work\cplp\screenshottool\src\ScreenshotTool\obj\Debug\net8.0-windows\win-x64\Views\SettingsWindow.g.cs
+D:\Work\cplp\screenshottool\src\ScreenshotTool\obj\Debug\net8.0-windows\win-x64\App.g.cs
+D:\Work\cplp\screenshottool\src\ScreenshotTool\obj\Debug\net8.0-windows\win-x64\ScreenshotTool_MarkupCompile.cache
+D:\Work\cplp\screenshottool\src\ScreenshotTool\obj\Debug\net8.0-windows\win-x64\ScreenshotTool.g.resources
+D:\Work\cplp\screenshottool\src\ScreenshotTool\obj\Debug\net8.0-windows\win-x64\ScreenshotTool.GeneratedMSBuildEditorConfig.editorconfig
+D:\Work\cplp\screenshottool\src\ScreenshotTool\obj\Debug\net8.0-windows\win-x64\ScreenshotTool.AssemblyInfoInputs.cache
+D:\Work\cplp\screenshottool\src\ScreenshotTool\obj\Debug\net8.0-windows\win-x64\ScreenshotTool.AssemblyInfo.cs
+D:\Work\cplp\screenshottool\src\ScreenshotTool\obj\Debug\net8.0-windows\win-x64\ScreenshotTool.csproj.CoreCompileInputs.cache
