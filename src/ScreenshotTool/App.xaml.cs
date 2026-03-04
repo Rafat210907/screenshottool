@@ -117,21 +117,24 @@ public partial class App : Application
         _trayIcon.TrayMouseDoubleClick += (s, e) => OnHotkeyPressed();
     }
 
-    // ─── Tray Icon Image (scissors ✂) ─────────────────────────────
+    // ─── Tray Icon Image (from embedded resource) ─────────────────
     private static Icon CreateTrayIconImage()
     {
-        // Create a simple 16x16 icon programmatically (scissors symbol)
+        // Load the embedded app.ico resource
+        var iconUri = new Uri("pack://application:,,,/Assets/app.ico", UriKind.Absolute);
+        var stream = Application.GetResourceStream(iconUri)?.Stream;
+        if (stream != null)
+        {
+            return new Icon(stream);
+        }
+
+        // Fallback: create a simple icon programmatically
         using var bmp = new Bitmap(16, 16);
         using var g = Graphics.FromImage(bmp);
         g.Clear(Color.Transparent);
-
-        // Draw a simple scissors shape
         using var pen = new Pen(Color.White, 2);
         g.DrawLine(pen, 2, 2, 14, 14);
         g.DrawLine(pen, 14, 2, 2, 14);
-        g.DrawEllipse(pen, 1, 1, 5, 5);
-        g.DrawEllipse(pen, 9, 9, 5, 5);
-
         var hIcon = bmp.GetHicon();
         return Icon.FromHandle(hIcon);
     }
