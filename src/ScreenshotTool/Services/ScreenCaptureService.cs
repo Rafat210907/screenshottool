@@ -17,11 +17,29 @@ public class ScreenCaptureService
     /// <summary>
     /// Capture a rectangular area of the screen at physical pixel coordinates.
     /// </summary>
-    public Bitmap CaptureRegion(int x, int y, int width, int height)
+    public Bitmap CaptureRegion(int x, int y, int width, int height, Bitmap? baseCapture = null)
     {
         var bitmap = new Bitmap(width, height);
         using var g = Graphics.FromImage(bitmap);
-        g.CopyFromScreen(x, y, 0, 0, new Size(width, height));
+        
+        if (baseCapture != null)
+        {
+            // Crop from the frozen screen
+            int screenLeft = NativeMethods.GetSystemMetrics(NativeMethods.SM_XVIRTUALSCREEN);
+            int screenTop = NativeMethods.GetSystemMetrics(NativeMethods.SM_YVIRTUALSCREEN);
+            int sourceX = x - screenLeft;
+            int sourceY = y - screenTop;
+            g.DrawImage(baseCapture, 
+                new Rectangle(0, 0, width, height), 
+                new Rectangle(sourceX, sourceY, width, height), 
+                GraphicsUnit.Pixel);
+        }
+        else
+        {
+            // Fallback: capture live screen
+            g.CopyFromScreen(x, y, 0, 0, new Size(width, height));
+        }
+        
         return bitmap;
     }
 
@@ -55,10 +73,12 @@ public class ScreenCaptureService
     /// to the polygon defined by the point array. Pixels outside the shape
     /// are transparent (PNG-safe).
     /// </summary>
-    public Bitmap CaptureFreeform(Point[] freeformPoints)
+    public Bitmap CaptureFreeform(Point[] freeformPoints, Bitmap? baseCapture = null)
     {
-        // 1) Capture the full virtual screen
-        using var fullCapture = CaptureFullScreen();
+        // 1) Capture the full virtual screen OR use the provided frozen screen
+        Bitmap fullCapture = baseCapture ?? CaptureFullScreen();
+        try
+        {
 
         // 2) Calculate bounding box of the freeform shape
         int minX = freeformPoints.Min(p => p.X);
@@ -93,5 +113,14 @@ public class ScreenCaptureService
             GraphicsUnit.Pixel);
 
         return result;
+        }
+        finally
+        {
+            // Dispose the full capture only if we created it locally
+            if (baseCapture == null)
+            {
+                fullCapture.Dispose();
+            }
+        }
     }
 }

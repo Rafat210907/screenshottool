@@ -235,12 +235,18 @@ public partial class App : Application
             _ => SnipMode.Rectangle
         };
 
+        // ─── Capture Frozen Screen Before Showing Overlay ─────────
+        System.Drawing.Bitmap frozenScreen = _captureService.CaptureFullScreen();
+
         // ─── Show Overlay ─────────────────────────────────────────
         var overlay = new OverlayWindow(
             _captureService, _windowEnumService,
-            _settings.InkColor, mode);
+            _settings.InkColor, frozenScreen, mode);
 
         overlay.ShowDialog();
+
+        // ─── Free Resources ───────────────────────────────────────
+        frozenScreen.Dispose();
 
         // ─── Process Capture Result ───────────────────────────────
         if (!overlay.WasCancelled && overlay.CapturedBitmap != null)

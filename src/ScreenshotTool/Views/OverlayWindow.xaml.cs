@@ -59,12 +59,16 @@ public partial class OverlayWindow : Window
     // ─── Ink Color (from settings) ────────────────────────────────
     private Brush _inkBrush = Brushes.Red;
 
+    // ─── Frozen Background ────────────────────────────────────────
+    private System.Drawing.Bitmap? _frozenScreen;
+
     // ╔════════════════════════════════════════════════════════════╗
     // ║  Constructor                                               ║
     // ╚════════════════════════════════════════════════════════════╝
     public OverlayWindow(ScreenCaptureService captureService,
                          WindowEnumerationService windowEnumService,
                          string inkColorHex,
+                         System.Drawing.Bitmap? frozenScreen,
                          SnipMode defaultMode = SnipMode.Rectangle)
     {
         InitializeComponent();
@@ -72,6 +76,13 @@ public partial class OverlayWindow : Window
         _captureService = captureService;
         _windowEnumService = windowEnumService;
         _currentMode = defaultMode;
+        _frozenScreen = frozenScreen;
+
+        // Set the background to the frozen screen, creating the illusion of a frozen screen
+        if (_frozenScreen != null)
+        {
+            this.Background = new ImageBrush(BitmapHelper.ToBitmapSource(_frozenScreen));
+        }
 
         // Parse ink color from hex string
         try
@@ -86,12 +97,9 @@ public partial class OverlayWindow : Window
         FreeformLine.Stroke = _inkBrush;
     }
 
-    // ╔════════════════════════════════════════════════════════════╗
-    // ║  Window Loaded — Position overlay across all monitors      ║
-    // ╚════════════════════════════════════════════════════════════╝
-    protected override void OnContentRendered(EventArgs e)
+    protected override void OnSourceInitialized(EventArgs e)
     {
-        base.OnContentRendered(e);
+        base.OnSourceInitialized(e);
 
         // ─── Size to cover ALL monitors (virtual screen) ──────────
         int vsLeft = NativeMethods.GetSystemMetrics(NativeMethods.SM_XVIRTUALSCREEN);
@@ -114,6 +122,14 @@ public partial class OverlayWindow : Window
 
         // ─── Center toolbar on PRIMARY monitor (not virtual screen center) ─
         PositionToolbarOnPrimaryMonitor(vsLeft, dpiX);
+    }
+
+    // ╔════════════════════════════════════════════════════════════╗
+    // ║  Window Loaded — Ready to use                              ║
+    // ╚════════════════════════════════════════════════════════════╝
+    protected override void OnContentRendered(EventArgs e)
+    {
+        base.OnContentRendered(e);
 
         // ─── Highlight the active toolbar button ───────────────────
         UpdateToolbarHighlight();
@@ -344,8 +360,14 @@ public partial class OverlayWindow : Window
 
         // Hide overlay, capture, close
         Hide();
-        System.Threading.Thread.Sleep(150); // Wait for overlay to disappear
-        CapturedBitmap = _captureService.CaptureRegion(px, py, pw, ph);
+        
+        // Use frozen screen if we have it, otherwise fallback to sleep & capture
+        if (_frozenScreen == null)
+        {
+            System.Threading.Thread.Sleep(150); // Wait for overlay to disappear
+        }
+        
+        CapturedBitmap = _captureService.CaptureRegion(px, py, pw, ph, _frozenScreen);
         WasCancelled = false;
         Close();
     }
@@ -372,8 +394,11 @@ public partial class OverlayWindow : Window
             .ToArray();
 
         Hide();
-        System.Threading.Thread.Sleep(150);
-        CapturedBitmap = _captureService.CaptureFreeform(physicalPoints);
+        if (_frozenScreen == null)
+        {
+            System.Threading.Thread.Sleep(150);
+        }
+        CapturedBitmap = _captureService.CaptureFreeform(physicalPoints, _frozenScreen);
         WasCancelled = false;
         Close();
     }
@@ -431,10 +456,13 @@ public partial class OverlayWindow : Window
     private void CaptureWindowRegion(WindowInfo window)
     {
         Hide();
-        System.Threading.Thread.Sleep(150);
+        if (_frozenScreen == null)
+        {
+            System.Threading.Thread.Sleep(150);
+        }
         CapturedBitmap = _captureService.CaptureRegion(
             window.Bounds.X, window.Bounds.Y,
-            window.Bounds.Width, window.Bounds.Height);
+            window.Bounds.Width, window.Bounds.Height, _frozenScreen);
         WasCancelled = false;
         Close();
     }
@@ -445,8 +473,11 @@ public partial class OverlayWindow : Window
     private void CaptureFullscreen()
     {
         Hide();
-        System.Threading.Thread.Sleep(150);
-        CapturedBitmap = _captureService.CaptureFullScreen();
+        if (_frozenScreen == null)
+        {
+            System.Threading.Thread.Sleep(150);
+        }
+        CapturedBitmap = _frozenScreen != null ? (System.Drawing.Bitmap)_frozenScreen.Clone() : _captureService.CaptureFullScreen();
         WasCancelled = false;
         Close();
     }
