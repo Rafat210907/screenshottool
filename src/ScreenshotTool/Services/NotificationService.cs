@@ -12,15 +12,29 @@ namespace ScreenshotTool.Services;
 
 public class NotificationService
 {
+    // Tag used to identify screenshot toasts so new ones replace old ones instantly
+    private const string ScreenshotToastTag = "ScreenshotSaved";
+    private const string ScreenshotToastGroup = "Screenshots";
+
     // ─── Show "Screenshot Saved" Toast ────────────────────────────
     /// <summary>
     /// Display a Windows toast notification with a thumbnail of the
     /// captured screenshot and an action button to open the folder.
+    /// If a previous screenshot notification is still visible, it is
+    /// dismissed instantly before the new one appears.
     /// </summary>
     public void ShowScreenshotSaved(string filePath, string folderPath)
     {
         try
         {
+            // Dismiss any existing screenshot notification immediately
+            try
+            {
+                ToastNotificationManagerCompat.History
+                    .Remove(ScreenshotToastTag, ScreenshotToastGroup);
+            }
+            catch { /* ignore if nothing to remove */ }
+
             var fileName = Path.GetFileName(filePath);
 
             new ToastContentBuilder()
@@ -35,7 +49,12 @@ public class NotificationService
                     .SetContent("Open Image")
                     .AddArgument("action", "openImage")
                     .AddArgument("path", filePath))
-                .Show(toast => { toast.ExpirationTime = DateTimeOffset.Now.AddSeconds(10); });
+                .Show(toast =>
+                {
+                    toast.Tag = ScreenshotToastTag;
+                    toast.Group = ScreenshotToastGroup;
+                    toast.ExpirationTime = DateTimeOffset.Now.AddSeconds(10);
+                });
         }
         catch (Exception ex)
         {
